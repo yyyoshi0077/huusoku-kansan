@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>陸上競技100m無風換算</title>
+		<link rel="stylesheet" href="style.css" >
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js">
+		</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.4.0/marked.min.js">
+		</script>
+	</head>
+	
+	<body>
+        <div class="wrap">
+        <header class="midasi1">記録の無風換算</header>
+        <br>
+        <p class="bun">陸上競技の100m、200m、100mH、110mH、走幅跳、三段跳は、風速が計測されています。風速が+2.0m/sを超えると参考記録として扱われてしまいます。そのくらい、風の影響は大きいということです。<br>
+        <img src="%E9%A2%A8%E9%80%9F%E8%A8%88.jpg" class="wind" hspace="20">
+        <div class="f">←正式な記録として残らない。。。</div>
+        <img src="%E8%90%BD%E3%81%A1%E8%BE%BC%E3%82%80.jpg" class="boy">
+        <br clear="left">　<!--回り込み解除-->
+            
+        <p class="bun">今回は100mについて、風速が0.0m/sだと仮定した記録に換算するプログラムを用意しました。これを利用することで、ライバルや過去の自分と比較することができます。(風+0.1mの場合で大体0.1秒速くなります。参考程度にお願いします。)</p>
+        <h3 class="midasi2">100mの記録を無風状態に換算</h3>
+        <p class="bun">まず、記録と風速を「半角英数」で入力してください。風速は、向かい風なら負の値、追い風なら正の値で入力してください。<br>次に、計算のボタンをクリックすると、計算結果がその下に表示されます。</p><br><br>
+        <!--div class="img1"><img src="K10013070401_2106061541_2106061542_01_05.jpg"></div-->
+            
+            
+		<div id="app">
+            <div class="keisan">
+            <table border="1">
+                <tr><th>種目</th><td>100m</td></tr>
+                <tr><th>記録</th><td><input type="number" step="0.01" v-model.number="record1"></td></tr> <!--0.01秒間隔で数字を変更可能-->
+                <tr><th>風速</th><td><input type="number" step="0.1" v-model.number="wind">m/s</td></tr>　<!--0.1秒間隔で数字を変更可能-->
+            </table>
+            <button v-on:click="kansan">計算</button>　<!--ボタンを押すとkansan関数実行-->
+            <p>無風に換算した記録 <b>{{record2}}</b> 秒</p>
+            </div>
+            
+            <!--br clear="left"-->　<!--回り込み解除-->
+            
+            
+            <div class="ranking">
+                日本男子100m歴代10傑、見ますか？<button v-on:click="show1">見る</button>　<!--ボタンを押すとランキングを表示-->
+            <table border="1" v-if="isShow">　<!--上のshow関数呼び出しでisShow=trueになるのでこのテーブルを表示する-->
+                <thead>
+                    <th v-for="item in header">{{item}}</th>　<!--header配列を取り出す-->
+                </thead>
+                <tbody>
+                    <tr v-for="line in ranking">　<!--ranking配列の1行取り出し-->
+                        <td v-for="item in line">{{item}}</td>　<!--1行の中身を全て出す-->
+                    </tr>
+                </tbody>
+                <button v-on:click="show2" v-if="isShow">閉じる</button>
+            </table>
+            </div>
+            <p style="clear:both;"></p>
+
+        </div>
+        </div>
+		<script>
+            new Vue({
+                el: "#app",
+                data: {
+                record1: 10,
+                record2: 0,
+                wind: 1,
+                isShow: false,
+                header:[
+                    "順位",
+                    "タイム",
+                    "風速",
+                    "名前",
+                ],
+                ranking:[
+                    [1,"9秒95","+2.0","山縣亮太"],
+                    [2,"9秒97","+0.8","サニブラウン・アブデル・ハキーム"],
+                    [3,"9秒98","+1.8","桐生祥秀"],
+                    [3,"9秒98","+0.5","小池祐貴"],
+                    [5,"10秒00","+1.9","伊東浩司"],
+                    [6,"10秒01","+2.0","多田修平"],
+                    [7,"10秒02","+2.0","朝原宣治"],
+                    [8,"10秒03","+1.8","末續慎吾"],
+                    [8,"10秒03","+1.0","ケンブリッジ飛鳥"],
+                    [10,"10秒07","+1.9","江里口匡史"]
+                ],
+                },
+                methods: {
+                    kansan: function() {
+                        this.record2 = Math.ceil((this.record1 + (this.wind / 10)) * 100) / 100;
+                    },
+                    show1: function() {
+                        this.isShow = true;
+                    },
+                    show2: function() {
+                        this.isShow = false;
+                    }
+                } 
+            })
+        </script>
+	</body>
+</html>
